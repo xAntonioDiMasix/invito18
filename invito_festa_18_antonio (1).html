@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invito 18° Compleanno Antonio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: slideIn 1.5s ease forwards;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #FFD700;
+      animation: slideIn 1.5s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 1s;
+    }
+
+    .glow {
+      font-size: 1.5rem;
+      color: #00f7ff;
+      animation: pulse 2s infinite;
+      margin-top: 2rem;
+    }
+
+    .whatsapp {
+      margin-top: 2rem;
+      font-size: 1.1rem;
+    }
+
+    .whatsapp a {
+      color: #25D366;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0% { text-shadow: 0 0 5px #00f7ff, 0 0 10px #00f7ff; }
+      50% { text-shadow: 0 0 20px #00f7ff, 0 0 30px #00f7ff; }
+      100% { text-shadow: 0 0 5px #00f7ff, 0 0 10px #00f7ff; }
+    }
+
+    .fireworks {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Antonio Di Masi compie 18 anni!</h1>
+    <h2>Sei ufficialmente invitato 🎉</h2>
+    <p>📅 Data: 11 Settembre<br>🕗 Ora: dalle 20:00 in poi<br>🎂 A mezzanotte si festeggia il compleanno vero e proprio!</p>
+    <div class="glow">Non puoi mancare!</div>
+    <div class="whatsapp">
+      📲 Conferma la tua presenza su <a href="https://wa.me/393387517139" target="_blank">WhatsApp</a>
+    </div>
+  </div>
+  <canvas class="fireworks"></canvas>
+
+  <script>
+    const canvas = document.querySelector('.fireworks');
+    const ctx = canvas.getContext('2d');
+    let fireworks = [];
+    let width, height;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+
+    function Firework() {
+      this.x = Math.random() * width;
+      this.y = height;
+      this.radius = Math.random() * 3 + 2;
+      this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      this.vx = (Math.random() - 0.5) * 5;
+      this.vy = -Math.random() * 7 - 5;
+      this.alpha = 1;
+      this.decay = Math.random() * 0.01 + 0.005;
+
+      this.update = function() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= this.decay;
+      };
+
+      this.draw = function(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      };
+    }
+
+    function animate() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+      ctx.fillRect(0, 0, width, height);
+
+      if (Math.random() < 0.1) {
+        for (let i = 0; i < 10; i++) {
+          fireworks.push(new Firework());
+        }
+      }
+
+      fireworks = fireworks.filter(f => f.alpha > 0);
+      fireworks.forEach(f => {
+        f.update();
+        f.draw(ctx);
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    animate();
+  </script>
+</body>
+</html>
